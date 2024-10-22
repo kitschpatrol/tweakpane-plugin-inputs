@@ -1,117 +1,57 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>Tweakpane plugin</title>
-	<style>
-		body {
-			background: black;
-		}
-	</style>
-</head>
-<body>
-	<script type="module">
-		// tweakpane (main)
-		// import {Pane} from '../node_modules/tweakpane/dist/tweakpane.min.js';
-		import {Pane} from 'https://cdn.jsdelivr.net/npm/tweakpane/dist/tweakpane.min.js';
+  <head>
+    <meta charset="UTF-8" />
+    <title>Tweakpane plugin</title>
+    <style>
+      body {
+        background: black;
+      }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "tweakpane": "../node_modules/tweakpane/dist/tweakpane.js",
+          "@tweakpane/core": "../node_modules/@tweakpane/core/dist/index.js",
+          "tweakpane-plugin-inputs": "../dist/tweakpane-plugin-inputs.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <script type="module">
+      import * as Tweakpane from "tweakpane";
+      import * as TweakpanePluginInputs from "tweakpane-plugin-inputs";
 
-		// tweakpane plugin essentials 
-		import * as TweakpanePluginEssentials from 'https://cdn.jsdelivr.net/npm/@tweakpane/plugin-essentials/dist/tweakpane-plugin-essentials.min.js'
+      const params = {
+        rangeStepInput: 2,
+        numberStepInput: 2,
+        radiogrid: 25,
+        dots: 8.5,
+        interval: { min: -10, max: 10 },
+        stepper: 1.5,
+      };
 
-		// my plugin
-		import * as TweakpanePluginInputs from '../dist/tweakpane-plugin-inputs.min.js';
-  		// import * as TweakpanePluginInputs from 'https://cdn.jsdelivr.net/npm/tweakpane-plugin-inputs/dist/tweakpane-plugin-inputs.min.js';
+      const pane = new Tweakpane.Pane();
 
-		const params = {
-			rangeStepInput: 2,
-			numberStepInput: 2,
-			radiogrid: 25,
-			dots: 8.5,
-			interval: {min: -10, max: 10},
-			stepper: 1.5,
-		};
+      pane.registerPlugin(TweakpanePluginInputs);
 
-		const pane = new Pane();
-		pane.registerPlugin(TweakpanePluginEssentials); 
-		pane.registerPlugin(TweakpanePluginInputs); 
+      pane
+        .addBinding(params, "stepper", {
+          view: "stepper",
+          min: -5,
+          max: 5,
+          step: 0.5,
+        })
+        .on("change", (newValue) => {
+          updateStepperVal(newValue.value);
+        });
 
-		pane.addBinding(params, 'rangeStepInput', {
-			min: -10,
-			step: 1,
-			max: 10,
-		});
-		pane.addBinding(params, 'numberStepInput', {
-			min: -10,
-			step: 1,
-		});
+      window.pane = pane;
 
-		const scales = [10, 20, 25, 50, 75, 100];
-		pane.addBinding(params, 'radiogrid', {
-			view: 'radiogrid',
-			groupName: 'scale',
-			size: [3, 2],
-			cells: (x, y) => ({
-				title: `${scales[y * 3 + x]}%`,
-				value: scales[y * 3 + x],
-			}),
-			label: 'radiogrid',
-		});
-
-		pane.addBlade({
-			view: 'cubicbezier',
-			value: [0.5, 0, 0.5, 1],
-
-			expanded: true,
-			label: 'cubic\nbezier',
-			picker: 'inline',
-		});
-
-		pane.addBlade({
-			view: 'buttongrid',
-			size: [3, 3],
-			cells: (x, y) => ({
-				title: [
-					['NW', 'N', 'NE'],
-					['W',  '*', 'E'],
-					['SW', 'S', 'SE'],
-				][y][x],
-			}),
-			label: 'button\ngrid',
-		});
-
-		pane.addBinding(params, 'dots', {
-			view: 'dots',
-		});
-
-		pane.addBinding(params, 'interval', {
-			format: (v) => v.toFixed(1),
-			min: -20,
-			max: 20,
-			step: 2,
-		});
-
-		pane.addBinding(params, 'stepper', {
-			view: 'stepper',
-			min: -5,
-			max: 5,
-			step: 0.5,
-		}).on('change', newValue => {updateStepperVal(newValue.value)});
-
-		window.pane = pane;
-
-		function updateStepperVal(v) {
-			console.log(v);
-		}
-
-	</script>
-</body>
+      function updateStepperVal(v) {
+        console.log(v);
+      }
+    </script>
+  </body>
 </html>
-
-
-
-
-
-
-
-
-

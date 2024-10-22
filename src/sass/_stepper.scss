@@ -1,22 +1,23 @@
-@use '../../node_modules/@tweakpane/core/lib/sass/tp';
+@use "../../node_modules/@tweakpane/core/lib/sass/tp";
 
 .#{tp.$prefix}-stepv {
-	@extend %tp-input;
-	display: flex;
-	gap: tp.cssVar('container-h-padding');
-	background: none;
+  @extend %tp-input;
+  display: flex;
+  gap: tp.cssVar("container-h-padding");
+  background: none;
 
-	&:hover, &:active {
-		background: none;
-	}
+  &:hover,
+  &:active {
+    background: none;
+  }
 
-	&.#{tp.$prefix}-v-disabled {
-		opacity: 0.5;
-	}
+  &.#{tp.$prefix}-v-disabled {
+    opacity: 0.5;
+  }
 
-	&_b {
-		@extend %tp-button;
-		position: relative;
-		width: tp.cssVar('container-unit-size');
-	}
+  &_b {
+    @extend %tp-button;
+    position: relative;
+    width: tp.cssVar("container-unit-size");
+  }
 }
