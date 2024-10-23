@@ -17,7 +17,7 @@ import {
 import { StepperConstraint } from "./constraint/stepper.js";
 import { StepperTextController } from "./controller/stepper-text.js";
 
-interface StepperInputParams extends NumberInputParams, BaseInputParams {
+export interface StepperInputParams extends NumberInputParams, BaseInputParams {
   min?: number;
   max?: number;
   step?: number;
