@@ -11,6 +11,10 @@
     background: none;
   }
 
+  &_t {
+    flex: 1;
+  }
+
   &.#{tp.$prefix}-v-disabled {
     opacity: 0.5;
   }
