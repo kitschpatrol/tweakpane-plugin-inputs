@@ -3,14 +3,16 @@
   "version": "1.0.4-beta.3",
   "type": "module",
   "description": "A fork of tweakpane-plugin-inputs with build optimizations.",
-  "repository": "github:kitschpatrol/tweakpane-plugin-inputs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kitschpatrol/tweakpane-plugin-inputs.git"
+  },
   "homepage": "https://github.com/kitschpatrol/tweakpane-plugin-inputs",
   "author": "tallneil",
   "license": "MIT",
-  "packageManager": "pnpm@9.12.2",
+  "packageManager": "pnpm@10.5.2",
   "engines": {
-    "node": ">=18.0.0",
-    "pnpm": ">=9.0.0"
+    "node": ">=18.0.0"
   },
   "main": "dist/tweakpane-plugin-inputs.js",
   "types": "dist/types/index.d.ts",
@@ -31,10 +33,9 @@
     "format": "run-p format:*",
     "format:scss": "prettier --parser scss --write \"src/sass/**/*.scss\"",
     "format:ts": "eslint --fix \"src/**/*.ts\"",
-    "lint:ts": "ESLINT_USE_FLAT_CONFIG=false eslint --config eslint.config.js src/",
     "prepare": "run-s clean build",
     "prepublishOnly": "npm test",
-    "release": "bumpp --commit 'Release: %s' --tag '%s' && pnpm run build && pnpm publish --otp $(op read 'op://Personal/Npmjs/one-time password?attribute=otp')",
+    "release": "bumpp --commit 'Release: %s' --tag '%s' && pnpm run build && pnpm publish --tag latest --otp $(op read 'op://Personal/Npmjs/one-time password?attribute=otp')",
     "server": "http-server -c-1 -o /test/browser.html",
     "start": "run-p watch server",
     "test": "eslint \"src/**/*.ts\"",
@@ -46,37 +47,43 @@
     "tweakpane": "^4.0.0"
   },
   "dependencies": {
-    "@tweakpane/core": "^2.0.4"
+    "@tweakpane/core": "^2.0.5"
   },
   "devDependencies": {
-    "@eslint/js": "^9.13.0",
+    "@eslint/eslintrc": "^3.3.0",
+    "@eslint/js": "^9.21.0",
     "@rollup/plugin-alias": "^5.1.1",
-    "@rollup/plugin-node-resolve": "^15.3.0",
-    "@rollup/plugin-replace": "^6.0.1",
+    "@rollup/plugin-node-resolve": "^15.3.1",
+    "@rollup/plugin-replace": "^6.0.2",
     "@rollup/plugin-terser": "^0.4.4",
-    "@rollup/plugin-typescript": "^12.1.1",
-    "@typescript-eslint/eslint-plugin": "^8.11.0",
-    "@typescript-eslint/parser": "^8.11.0",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "@typescript-eslint/eslint-plugin": "^8.26.0",
+    "@typescript-eslint/parser": "^8.26.0",
     "autoprefixer": "^10.4.20",
-    "bumpp": "^9.7.1",
-    "eslint": "^9.13.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.2.1",
+    "bumpp": "^10.0.3",
+    "eslint": "^9.21.0",
+    "eslint-config-prettier": "^10.0.2",
+    "eslint-plugin-prettier": "^5.2.3",
     "eslint-plugin-simple-import-sort": "^12.1.1",
-    "globals": "^15.11.0",
+    "globals": "^16.0.0",
     "http-server": "^14.1.1",
     "npm-run-all": "^4.1.5",
     "onchange": "^7.1.0",
-    "postcss": "^8.4.47",
-    "prettier": "^3.3.3",
+    "postcss": "^8.5.3",
+    "prettier": "^3.5.3",
     "prettier-plugin-pkg": "^0.18.1",
-    "rimraf": "^5.0.10",
-    "rollup": "^4.24.0",
+    "rimraf": "^6.0.1",
+    "rollup": "^4.34.9",
     "rollup-plugin-cleanup": "^3.2.1",
-    "sass": "^1.80.3",
-    "typescript": "^5.6.3"
+    "sass": "^1.85.1",
+    "typescript": "^5.8.2"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@parcel/watcher"
+    ]
   }
 }
