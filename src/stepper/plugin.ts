@@ -2,6 +2,7 @@ import {
   BaseInputParams,
   BindingTarget,
   CompositeConstraint,
+  createNumberTextInputParamsParser,
   createNumberTextPropsObject,
   createPlugin,
   createRangeConstraint,
@@ -18,9 +19,6 @@ import { StepperConstraint } from "./constraint/stepper.js";
 import { StepperTextController } from "./controller/stepper-text.js";
 
 export interface StepperInputParams extends NumberInputParams, BaseInputParams {
-  min?: number;
-  max?: number;
-  step?: number;
   view: "stepper";
 }
 
@@ -43,11 +41,10 @@ export const StepperInputPlugin: InputBindingPlugin<
     }
 
     const result = parseRecord<StepperInputParams>(params, (p) => ({
+      // Addresses https://github.com/kitschpatrol/svelte-tweakpane-ui/issues/24
+      ...createNumberTextInputParamsParser(p),
       // `view` option may be useful to provide a custom control for primitive values
       view: p.required.constant("stepper"),
-      max: p.optional.number,
-      min: p.optional.number,
-      step: p.optional.number ?? 1,
     }));
 
     // Return a typed value and params to accept the user input

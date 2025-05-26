@@ -39,8 +39,10 @@
       pane
         .addBinding(params, "stepper", {
           view: "stepper",
+          format: (v) => `${v}!`,
+          label: "Value",
           min: -5,
-          max: 5,
+          max: 10,
           step: 0.5,
         })
         .on("change", (newValue) => {
