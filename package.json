@@ -1,6 +1,6 @@
 {
   "name": "@kitschpatrol/tweakpane-plugin-inputs",
-  "version": "1.0.4-beta.5",
+  "version": "1.0.4-fork.1",
   "type": "module",
   "description": "Fork of tweakpane-plugin-inputs with build optimizations.",
   "repository": {
