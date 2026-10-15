@@ -9,9 +9,10 @@ interface Config {
   constraint: StepperConstraint | undefined;
 }
 
-export class StepperButtonsController
-  implements ValueController<number, StepperButtonsView>
-{
+export class StepperButtonsController implements ValueController<
+  number,
+  StepperButtonsView
+> {
   public readonly value: Value<number>;
   public readonly view: StepperButtonsView;
   public readonly viewProps: ViewProps;

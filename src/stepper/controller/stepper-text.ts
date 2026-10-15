@@ -21,9 +21,10 @@ interface Config {
   viewProps: ViewProps;
 }
 
-export class StepperTextController
-  implements ValueController<number, StepperTextView>
-{
+export class StepperTextController implements ValueController<
+  number,
+  StepperTextView
+> {
   public readonly value: Value<number>;
   public readonly view: StepperTextView;
   public readonly viewProps: ViewProps;
