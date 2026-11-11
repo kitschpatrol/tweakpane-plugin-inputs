@@ -28,7 +28,3 @@ skills-lock.json
 vendor/
 
 # Customizations
-node_modules
-.notes
-
-/dist/

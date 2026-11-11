@@ -1,25 +1,42 @@
+import type {
+	BaseInputParams,
+	BindingTarget,
+	InputBindingPlugin,
+	NumberInputParams,
+} from '@tweakpane/core'
 import {
-  BaseInputParams,
-  BindingTarget,
-  CompositeConstraint,
-  createNumberTextInputParamsParser,
-  createNumberTextPropsObject,
-  createPlugin,
-  createRangeConstraint,
-  createStepConstraint,
-  InputBindingPlugin,
-  NumberInputParams,
-  parseNumber,
-  parseRecord,
-  TpError,
-  ValueMap,
-} from "@tweakpane/core";
+	CompositeConstraint,
+	createNumberTextInputParamsParser,
+	createNumberTextPropsObject,
+	createPlugin,
+	createRangeConstraint,
+	createStepConstraint,
+	parseNumber,
+	parseRecord,
+	TpError,
+	ValueMap,
+} from '@tweakpane/core'
+import { StepperConstraint } from './constraint/stepper'
+import { StepperTextController } from './controller/stepper-text'
 
-import { StepperConstraint } from "./constraint/stepper.js";
-import { StepperTextController } from "./controller/stepper-text.js";
+export type StepperInputParams = BaseInputParams &
+	NumberInputParams & {
+		view: 'stepper'
+	}
 
-export interface StepperInputParams extends NumberInputParams, BaseInputParams {
-  view: "stepper";
+/** Fall back to a button step of 1 for a missing, zero, or NaN step. */
+function getButtonStep(step: number | undefined): number {
+	return step === undefined || step === 0 || Number.isNaN(step) ? 1 : step
+}
+
+/** Convert an external unknown value into the internal value. */
+function readNumber(exValue: unknown): number {
+	return typeof exValue === 'number' ? exValue : 0
+}
+
+/** Write the primitive value to the binding target. */
+function writeNumber(target: BindingTarget, inValue: number): void {
+	target.write(inValue)
 }
 
 // NOTE: JSDoc comments of `InputBindingPlugin` can be useful to know details about each property
@@ -27,86 +44,66 @@ export interface StepperInputParams extends NumberInputParams, BaseInputParams {
 // - The plugin receives the bound value as `Ex`,
 // - converts `Ex` into `In` and holds it
 // - P is the type of the parsed parameters
-export const StepperInputPlugin: InputBindingPlugin<
-  number,
-  number,
-  StepperInputParams
-> = createPlugin({
-  id: "input-stepper",
-  type: "input",
+export const StepperInputPlugin: InputBindingPlugin<number, number, StepperInputParams> =
+	createPlugin({
+		accept(exValue, params) {
+			if (typeof exValue !== 'number') {
+				return null
+			}
 
-  accept: (exValue, params) => {
-    if (typeof exValue !== "number") {
-      return null;
-    }
+			const result = parseRecord<StepperInputParams>(params, (p) => ({
+				// Addresses https://github.com/kitschpatrol/svelte-tweakpane-ui/issues/24
+				...createNumberTextInputParamsParser(p),
+				// `view` option may be useful to provide a custom control for primitive values
+				view: p.required.constant('stepper'),
+			}))
 
-    const result = parseRecord<StepperInputParams>(params, (p) => ({
-      // Addresses https://github.com/kitschpatrol/svelte-tweakpane-ui/issues/24
-      ...createNumberTextInputParamsParser(p),
-      // `view` option may be useful to provide a custom control for primitive values
-      view: p.required.constant("stepper"),
-    }));
+			// Return a typed value and params to accept the user input
+			return result
+				? {
+						initialValue: exValue,
+						params: result,
+					}
+				: null
+		},
+		binding: {
+			constraint(args) {
+				const constraints = []
+				const cr = createRangeConstraint(args.params)
+				if (cr) {
+					constraints.push(cr)
+				}
 
-    // Return a typed value and params to accept the user input
-    return result
-      ? {
-          initialValue: exValue,
-          params: result,
-        }
-      : null;
-  },
-  binding: {
-    //reader: (_args) => stepperFromUnknown,
-    //writer: (_args) => writeStepper,
+				const cs = createStepConstraint(args.params)
+				if (cs) {
+					constraints.push(cs)
+				}
 
-    reader(_args) {
-      return (exValue: unknown): number => {
-        // Convert an external unknown value into the internal value
-        return typeof exValue === "number" ? exValue : 0;
-      };
-    },
+				return new StepperConstraint(
+					getButtonStep(args.params.step),
+					new CompositeConstraint(constraints),
+				)
+			},
+			reader: (_args) => readNumber,
+			writer: (_args) => writeNumber,
+		},
+		controller(args) {
+			const v = args.value
+			const c = args.constraint
+			if (!(c instanceof StepperConstraint)) {
+				throw TpError.shouldNeverHappen()
+			}
 
-    writer(_args) {
-      return (target: BindingTarget, inValue: number) => {
-        // Use `target.write()` to write the primitive value to the target,
-        // or `target.writeProperty()` to write a property of the target
-        target.write(inValue);
-      };
-    },
+			const textProps = ValueMap.fromObject(createNumberTextPropsObject(args.params, v.rawValue))
 
-    constraint(args) {
-      const constraints = [];
-      const cr = createRangeConstraint(args.params);
-      if (cr) {
-        constraints.push(cr);
-      }
-      const cs = createStepConstraint(args.params);
-      if (cs) {
-        constraints.push(cs);
-      }
-      return new StepperConstraint(
-        args.params.step ? args.params.step : 1,
-        new CompositeConstraint(constraints),
-      );
-    },
-  },
-  controller(args) {
-    const v = args.value;
-    const c = args.constraint;
-    if (!(c instanceof StepperConstraint)) {
-      throw TpError.shouldNeverHappen();
-    }
-
-    const textProps = ValueMap.fromObject(
-      createNumberTextPropsObject(args.params, v.rawValue),
-    );
-
-    return new StepperTextController(args.document, {
-      constraint: c,
-      parser: parseNumber,
-      textProps: textProps,
-      value: v,
-      viewProps: args.viewProps,
-    });
-  },
-});
+			return new StepperTextController(args.document, {
+				constraint: c,
+				parser: parseNumber,
+				textProps,
+				value: v,
+				viewProps: args.viewProps,
+			})
+		},
+		id: 'input-stepper',
+		type: 'input',
+	})

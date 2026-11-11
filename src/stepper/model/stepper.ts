@@ -1,39 +1,37 @@
-import { PointNdAssembly } from "@tweakpane/core";
+import type { PointNdAssembly } from '@tweakpane/core'
 
-export interface StepperObject {
-  val: number;
+export type StepperObject = {
+	val: number
 }
 
 export class Stepper {
-  public val: number;
+	public val: number
 
-  constructor(val: number) {
-    this.val = val;
-  }
+	constructor(value: number) {
+		this.val = value
+	}
 
-  public static isObject(obj: unknown): obj is StepperObject {
-    if (typeof obj !== "object" || obj === null) {
-      return false;
-    }
-    const val = (obj as Record<string, any>).val;
-    if (typeof val !== "number") {
-      return false;
-    }
-    return true;
-  }
+	public static equals(v1: Stepper, v2: Stepper): boolean {
+		return v1.val === v2.val
+	}
 
-  public static equals(v1: Stepper, v2: Stepper): boolean {
-    return v1.val === v2.val;
-  }
+	public static isObject(object: unknown): object is StepperObject {
+		if (typeof object !== 'object' || object === null) {
+			return false
+		}
 
-  public toObject(): StepperObject {
-    return {
-      val: this.val,
-    };
-  }
+		const { val } = object as Record<string, unknown>
+		return typeof val === 'number'
+	}
+
+	public toObject(): StepperObject {
+		return {
+			val: this.val,
+		}
+	}
 }
 
 export const StepperAssembly: PointNdAssembly<number> = {
-  fromComponents: (comps) => comps[0],
-  toComponents: (p) => [p],
-};
+	fromComponents: (comps) => comps[0] ?? 0,
+	toComponents: (p) => [p],
+}
