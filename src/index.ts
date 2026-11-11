@@ -9,5 +9,6 @@ export const plugins: TpPlugin[] = [StepperInputPlugin]
 export * from './stepper/controller/stepper-buttons'
 export * from './stepper/controller/stepper-text'
 export * from './stepper/model/stepper'
+export type { StepperInputParams } from './stepper/plugin'
 export * from './stepper/view/stepper-buttons'
 export * from './stepper/view/stepper-text'
