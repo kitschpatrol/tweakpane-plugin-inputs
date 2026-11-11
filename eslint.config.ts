@@ -19,19 +19,25 @@ export default eslintConfig(
 			// These fixes use ES2023's toReversed and toSorted.
 			'unicorn/no-array-reverse': 'off',
 			'unicorn/no-array-sort': 'off',
+			// Null sentinels are a Tweakpane core convention
+			'unicorn/no-null': 'off',
 		},
 	},
 	{
 		// Upstream code follows Tweakpane core's conventions: null sentinels, trailing-underscore
-		// private members, the ClassName() factory, methods bound in constructors, and TpError throws.
+		// private members, the ClassName() factory, and TpError throws.
 		files: ['src/**/*.ts', 'test/**/*.ts'],
 		rules: {
 			'new-cap': ['error', { capIsNewExceptions: ['ClassName'] }],
 			'ts/naming-convention': 'off',
-			'ts/no-restricted-types': 'off',
 			'ts/only-throw-error': 'off',
-			'ts/unbound-method': 'off',
-			'unicorn/no-null': 'off',
+		},
+	},
+	{
+		// Pass lint before building
+		files: ['readme.md/*.ts'],
+		rules: {
+			'import/no-unresolved': 'off',
 		},
 	},
 )

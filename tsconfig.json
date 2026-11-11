@@ -1,8 +1,10 @@
 {
 	"extends": "@kitschpatrol/typescript-config",
 	"compilerOptions": {
+		// The base config targets ES2025; keep type checks within the ES2022 browser build target.
 		"target": "ES2022",
 		"lib": ["ES2022", "DOM"],
+		// Vite's client types declare the ?inline Sass import.
 		"types": ["node", "vite/client"]
 	}
 }
