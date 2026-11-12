@@ -5,13 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.0.4-fork.2] - 2026-11-11
+
+### Added
+
+- Add a `/lite` entry point and minified lite bundle that keep `@tweakpane/core` external.
+- Export `StepperInputParams` from both package entry points.
+
+### Changed
+
+- Bundle `@tweakpane/core` in the default JavaScript builds; use `/lite` to share core across plugins.
+- **Breaking:** Restrict package imports to the root, `/lite`, and `/package.json` exports, and consolidate declarations into `dist/tweakpane-plugin-inputs.d.ts`.
+- **Breaking:** Raise the browser JavaScript build target from ES2015 to ES2022.
+- **Breaking:** Restrict declared Node.js support to versions 18, 20, 22, 24, and 26 or newer.
+- **Breaking:** Change `StepperObject` from an interface to a type alias, removing declaration-merging support.
+
+### Fixed
+
+- Type the exported `css` value as `string` rather than the build placeholder literal.
+- Return `0` from `StepperAssembly.fromComponents` when the component array is empty.
+
+### Documentation
+
+- Add installation and stepper usage examples, document Tweakpane 4 requirements, and clarify dependency handling for `/lite`.
+- Document the fork's tooling changes and add contribution guidelines.
 
 ### Maintenance
 
 - Update the development package manager to pnpm 12.16.1.
 - Update the GitHub release and changelog-generation actions.
 - Switch npm publishing authentication to a one-time password retrieved from 1Password.
+- Migrate bundling, declaration generation, and SCSS processing to tsdown, with Publint and Are the Types Wrong package checks.
+- Move the browser demo to Vite with live reload through `pnpm dev`.
+- Adopt `@kitschpatrol/shared-config` and `ksc` for linting and formatting, with shared checks and VS Code integration.
+- Add Vitest and happy-dom tests for plugin registration, compiled styles, stepper behavior, change events, refresh, disabled state, and disposal.
+- Add build, lint, and test CI on Linux, macOS, and Windows.
+- Add a monthly workflow for automated dependency-update pull requests.
+- Generate changelogs with `chagent` during versioning, include them in release commits, and build after the version bump.
+- Refresh development dependencies, update pnpm to 12.18.0, and refresh CI, repository metadata, and Fork Tender actions.
 
 ## [1.0.4-fork.1] - 2026-10-15
 
@@ -80,10 +111,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Establish pnpm-based builds, linting, formatting, and release tooling with refreshed development dependencies, a browser test harness, and GitHub release and metadata workflows.
 
-[Unreleased]: https://github.com/kitschpatrol/tweakpane-plugin-inputs/compare/1.0.4-fork.1...HEAD
 [1.0.4-beta.1]: https://github.com/kitschpatrol/tweakpane-plugin-inputs/releases/tag/1.0.4-beta.1
 [1.0.4-beta.2]: https://github.com/kitschpatrol/tweakpane-plugin-inputs/compare/1.0.4-beta.1...1.0.4-beta.2
 [1.0.4-beta.3]: https://github.com/kitschpatrol/tweakpane-plugin-inputs/compare/1.0.4-beta.2...1.0.4-beta.3
 [1.0.4-beta.4]: https://github.com/kitschpatrol/tweakpane-plugin-inputs/compare/1.0.4-beta.3...1.0.4-beta.4
 [1.0.4-beta.5]: https://github.com/kitschpatrol/tweakpane-plugin-inputs/compare/1.0.4-beta.4...1.0.4-beta.5
 [1.0.4-fork.1]: https://github.com/kitschpatrol/tweakpane-plugin-inputs/compare/1.0.4-beta.5...1.0.4-fork.1
+[1.0.4-fork.2]: https://github.com/kitschpatrol/tweakpane-plugin-inputs/compare/1.0.4-fork.1...1.0.4-fork.2
